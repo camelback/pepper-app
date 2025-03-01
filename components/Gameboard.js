@@ -5,12 +5,16 @@ import { Button } from "../components/ui/button";
 import { CardComponent } from "../components/ui/Card";
 import CardGameTable from "./CardGameTable";
 
+import {ShuffledDeck } from "../components/ui/ShuffledDeck";
+import "../app/CardGame.css";
+
 export default function GameBoard({ reset = false }) {
   const [game, setGame] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingPlayerCards, setLoadingCards] = useState(false);
   const [error, setError] = useState(null);
+  const [activePlayerId, setActivePlayerId] = useState(1);
 
   useEffect(() => {
     
@@ -51,20 +55,41 @@ export default function GameBoard({ reset = false }) {
         setLoadingCards(false);
       }
     };
+    const discard = (card) => {
+        try {
+            console.log(card);
+            const newGame = game;
 
-  if (loading) return <p className="text-white">Loading game...</p>;
-  if (loadingPlayerCards) return <p className="text-white">Loading player cards...</p>;
+            newGame.deck.push(card);
+            setGame(newGame);
+
+          } catch (err) {
+            setError("Failed to deal cards.");
+          } finally {
+            setLoadingCards(false);
+          }
+        };
+
+  //if (loading) return <p className="text-white">Loading game...</p>;
+  //if (loadingPlayerCards) return <p className="text-white">Loading player cards...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-green-700">
-      <div className="flex space-x-4 mb-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow" onClick={handleStartButton}>Start Game</button>
-        <button className="px-4 py-2 bg-red-500 text-white rounded-lg shadow">Restart Game</button>
-        <button className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow" onClick={handleShuffleButton}>Shuffle Cards</button>
-        <button className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow" onClick={handleDealButton}>Deal Cards</button>
+    <div className="game-board">
+      <div className="game-controls">
+        <button className="btn start-game-btn" onClick={handleStartButton}>Start Game</button>
+        <button className="btn restart-game-btn">Restart Game</button>
+        <button className="btn shuffle-btn" onClick={handleShuffleButton}>Shuffle Cards</button>
+        <button className="btn deal-btn" onClick={handleDealButton}>Deal Cards</button>
       </div>
-      {game && <CardGameTable  players={game.players} /> }
+      {game && 
+        <div>
+            <CardGameTable  players={game.players} 
+                deck={game.deck} 
+                activePlayerId={activePlayerId} 
+                discard={discard} /> 
+        <ShuffledDeck deck={game.deck} /></div>
+      }
     </div>
     
   );

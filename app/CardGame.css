@@ -1,0 +1,248 @@
+/* General Game Board Layout */
+.game-layout {
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  align-items: center;
+  justify-items: center;
+  min-height: 100vh;
+  padding: 8px;
+  padding-bottom: 20px;
+  gap: 16px;
+  font-family: var(--font-geist-sans);
+}
+
+/* Game Main Section */
+.game-main {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centers vertically */
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Game Footer */
+.game-footer {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #226622;
+  }
+  
+  /* Game Control Buttons */
+  .game-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .start-game-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  .restart-game-btn {
+    background-color: #ff2a00;
+    color: white;
+  }
+  .shuffle-btn {
+    background-color: #00ffcc;
+    color: white;
+  }
+  .deal-btn {
+    background-color: #009819;
+    color: white;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+  }
+  
+  /* Game State Display */
+  .game-state {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .card-game-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Card Game Table */
+  .card-game-table {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    background-color: #145214;
+    border: 4px solid #ffcc00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Center of Table */
+  .table-center {
+    position: absolute;
+    /* width: 80px; */
+    height: 80px;
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Player UI */
+  .player-ui {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: transform 0.3s ease-in-out;
+  }
+  /* Shuffled Deck */
+.shuffled-deck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.deck-stack {
+  position: relative;
+  width: 80px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.deck-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(calc(var(--rotation) * 1deg));
+  transition: transform 0.2s ease-in-out;
+}
+
+.deck-card:hover {
+  transform: translateY(-10px) scale(1.1);
+  z-index: 10;
+}
+  
+  /* Highlight active player */
+  .player-active {
+    border: 3px solid #ffcc00;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
+  }
+  
+  /* Player Positioning */
+  .player-position {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .position-bottom {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .position-left {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .position-top {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .position-right {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Card Hand */
+  .card-hand {
+    position: relative;
+    display: flex;
+    height: 100px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .main-card-hand {
+    position: relative;
+    display: flex;
+    height: 100px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  /* Individual Cards */
+  .card {
+    width: 64px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #666;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Card Position Overlap */
+  .card-position {
+    position: absolute;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Raise hovered card */
+  .hover-raise:hover {
+    transform: translateY(-10px) scale(1.2);
+    z-index: 999;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+  

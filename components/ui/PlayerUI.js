@@ -1,8 +1,8 @@
-export function PlayerUI({ className, children }) {
+import "../../app/CardGame.css";
+
+export function PlayerUI({ className, children, isActive}) {
   return (
-    <div className={`bg-gray-800 text-white p-4 rounded-lg shadow-lg ${className}`}>
-      {children}
-    </div>
+    <div className={`player-ui ${className} ${isActive ? "player-active" : ""}`}>{children}</div>
   );
   }
   

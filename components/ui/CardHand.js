@@ -1,16 +1,17 @@
 import {CardComponent } from "../ui/Card";
+import "../../app/CardGame.css";
 
-export function CardHand({ cards }) {
+export function CardHand({ cards, isActive, discard }) {
     return (
-        <div className="relative flex mt-2 w-[200px] h-16">
+        <div className="card-hand">
             {cards.map((card, cardIndex) => (
             <div
                 key={cardIndex}
-                className="absolute"
+                className="card-position hover-raise"
                 style={{ left: `${cardIndex * 20}px`, zIndex: cardIndex }}
             >
                 
-                <CardComponent card={card} />
+                <CardComponent card={card} discard={discard} />
             </div>
             ))}
         </div>

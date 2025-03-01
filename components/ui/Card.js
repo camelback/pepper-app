@@ -1,13 +1,17 @@
 import cardLookup from "@/utils/cardLookup";
+import "../../app/CardGame.css";
 
-export function CardComponent({ card }) {
+export function CardComponent({ card, discard }) {
   const suit = cardLookup.suits[card.suit] || {};
   const value = cardLookup.values[card.value] || card.value;
   const localImageUrl = cardLookup.getImageUrl(card.code);
 
+  const discardEvent = (event) => {
+    discard(card);
+  }
   return (
-    <div className="w-16 h-24 bg-gray-600 flex items-center justify-center rounded-lg shadow-lg">
-      <img src={localImageUrl} alt={suit.icon} className="w-full h-full object-contain" />
+    <div className="card" onClick={discardEvent}>
+      <img src={localImageUrl} alt={suit.icon} className="card-image" />
     </div>
   );
 }
