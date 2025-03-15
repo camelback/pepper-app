@@ -6,11 +6,12 @@ export function CardComponent({ card, discard }) {
   const value = cardLookup.values[card.value] || card.value;
   const localImageUrl = cardLookup.getImageUrl(card.code);
 
-  const discardEvent = (event) => {
+  const discardEvent = (card) => {
+    console.log("CardComponent: discardEvent()");
     discard(card);
   }
   return (
-    <div className="card" onClick={discardEvent}>
+    <div className="card" onClick={() => discardEvent(card)} >
       <img src={localImageUrl} alt={suit.icon} className="card-image" />
     </div>
   );

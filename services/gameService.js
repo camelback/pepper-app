@@ -1,6 +1,22 @@
-const API_GAMES_URL = "http://localhost:5288/games";
-const API_SHUFFLE_URL = "http://localhost:5288/games";
+const API_GAMES_URL = process.env.NEXT_PUBLIC_API_GAME;// "http://localhost:5288/games";
+const API_DEAL_URL = process.env.NEXT_PUBLIC_API_DEAL;
+const API_SHUFFLE_URL = process.env.NEXT_PUBLIC_API_SHUFFLE;
+const API_DISCARD_URL = process.env.NEXT_PUBLIC_API_DISCARD;
+//const API_SHUFFLE_URL = "http://localhost:5288/games";
+const DEBUG_API_GAME = "http://localhost:3001/api/game";
+const DEBUG_API_SHUFFLE = "http://localhost:3001/api/deal";
 
+export async function getGame() {
+  try {
+    const response = await fetch(`${API_GAMES_URL}`);
+    const data = await response.json();
+    console.log("getGame()", data);
+    return data;
+  } catch (error) {
+    console.error("Error creating game:", error);
+    throw error;
+  }
+}
 /**
  * Fetches a new game with the specified number of players.
  * @param {number} numPlayers - Number of players in the game.
@@ -9,16 +25,25 @@ const API_SHUFFLE_URL = "http://localhost:5288/games";
 export async function createGame(NumberOfPlayers) {
   try {
     if(NumberOfPlayers != 4) NumberOfPlayers = 4;
-    const response = await fetch(`${API_GAMES_URL}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(NumberOfPlayers),
-    });
+    
+    if(process.env.NEXT_PUBLIC_DEBUG === 'true'){
+      const response = await getGame();
+      return response;
+    } 
+    const  response = await fetch(`${API_GAMES_URL}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+          body: JSON.stringify(NumberOfPlayers),
+      });
+  
+    
+    
     if (!response.ok) {
-        throw new Error('Failed to submit guess');
+        console.log(response);
+        throw new Error('Failed to create game', response);
     }
     const data = await response.json();
     console.log("PepperAPI Game response data", data);
@@ -30,8 +55,25 @@ export async function createGame(NumberOfPlayers) {
   }
 }
 
+
+export async function getShuffle() {
+  try {
+    const response = await fetch(`${API_SHUFFLE_URL}`);
+    const data = await response.json();
+    console.log("getShuffle()", data);
+    return data;
+  } catch (error) {
+    console.error("Error get shuffled deck", error);
+    throw error;
+  }
+}
+
 export async function shuffle(id) {
   try {
+    if(process.env.NEXT_PUBLIC_DEBUG === 'true'){
+      const response = await getShuffle();
+      return response;
+    } 
     const resolvedUrl = API_GAMES_URL+"/"+id+"/shuffle2";
     const reqData = {
       id: id
@@ -57,8 +99,25 @@ export async function shuffle(id) {
   }
 }
 
+export async function getDeal() {
+  try {
+    const response = await fetch(`${API_DEAL_URL}`);
+    const data = await response.json();
+    console.log("getDeal()", data);
+    return data;
+  } catch (error) {
+    console.error("Error get game with cards dealt", error);
+    throw error;
+  }
+}
+
+
 export async function deal(id) {
   try {
+    if(process.env.NEXT_PUBLIC_DEBUG === 'true'){
+      const response = await getDeal();
+      return response;
+    } 
     const resolvedUrl = API_GAMES_URL+"/"+id+"/deal2";
     const reqData = {
       id: id
@@ -80,6 +139,59 @@ export async function deal(id) {
   
   } catch (error) {
     console.error("Error dealing cards:", error);
+    throw error;
+  }
+}
+
+export async function discardCardLocal(id, card) {
+  const reqData = {
+    id: id,
+    card: card
+  };
+  const response = await fetch(`${API_DISCARD_URL}`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
+      body: JSON.stringify(reqData),
+  });
+  if (!response.ok) {
+      throw new Error('Failed to discard card');
+  }
+  const data = await response.json();
+  console.log("PepperAPI Discard response data", data);
+  return data;
+}
+
+export async function discardCard(id, card) {
+  try {
+    if(process.env.NEXT_PUBLIC_DEBUG === 'true'){
+      const response = await discardCardLocal(id, card);
+      return response;
+    } 
+    const resolvedUrl = API_GAMES_URL+"/"+id+"/discard";
+    const reqData = {
+      id: id,
+      card: card
+    };
+    const response = await fetch(`${resolvedUrl}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(reqData),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to discard card');
+    }
+    const data = await response.json();
+    console.log("PepperAPI Discard response data", data);
+    return data;
+  
+  } catch (error) {
+    console.error("Error discarding cards:", error);
     throw error;
   }
 }
