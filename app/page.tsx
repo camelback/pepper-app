@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Gameboard from "../components/Gameboard";
 import CardGameTable from "../components/CardGameTable";
-import "../app/CardGame.css";
+import "../css/CardGame.css";
 
 export default function Home() {
   return (

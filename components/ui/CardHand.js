@@ -1,7 +1,7 @@
 import {CardComponent } from "../ui/Card";
-import "../../app/CardGame.css";
+import "../../css/CardGame.css";
 
-export function CardHand({ cards, discard }) {
+export function CardHand({ player, cards, discard, isActive }) {
 
     return (
         <div className="card-hand">
@@ -11,7 +11,7 @@ export function CardHand({ cards, discard }) {
                 className="card-position hover-raise"
                 style={{ left: `${cardIndex * 20}px`, zIndex: cardIndex }}
             >
-                <CardComponent card={card} discard={discard} />
+                <CardComponent player={player} card={card} discard={discard} disabled={!isActive}/>
             </div>
             ))}
         </div>

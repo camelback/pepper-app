@@ -1,4 +1,4 @@
-import "../../app/CardGame.css";
+import "../../css/CardGame.css";
 
 export function PlayerUI({ className, children, isActive}) {
   return (

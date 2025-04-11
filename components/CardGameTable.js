@@ -7,7 +7,8 @@ import { motion } from "framer-motion";
 import { Button } from "../components/ui/button";
 import {CardHand} from "../components/ui/CardHand";
 import {ShuffledDeck } from "../components/ui/ShuffledDeck";
-import "../app/CardGame.css";
+import { GameCardPile } from "./ui/GameCardPile";
+import "../css/CardGame.css";
 
 export default function CardGameTable({ players, deck, discard, activePlayerId }) {
   const defaultPositions = ["bottom", "left", "top", "right"]
@@ -22,12 +23,14 @@ export default function CardGameTable({ players, deck, discard, activePlayerId }
           <motion.div
             key={player.id}
             className={`player-position ${getPositionClass(defaultPositions[index % defaultPositions.length])}`} >
-            <PlayerUI  isActive={player.id === activePlayerId}>
-              <PlayerUIContent player={player} discard={discard} isActive={player.id === activePlayerId} />
-            </PlayerUI>
+            {/* <PlayerUI  isActive={player.id === activePlayerId}> */}
+              <PlayerUIContent player={player} discard={discard} isActive={index+1 == activePlayerId} />
+            {/* </PlayerUI> */}
           </motion.div>
         ))}
       </div>
+      
+      {/* <GameCardPile discardDeck={deck} /> */}
       </div>
   );
 }

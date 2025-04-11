@@ -1,18 +1,20 @@
 import cardLookup from "@/utils/cardLookup";
-import "../../app/CardGame.css";
+import "../../css/CardGame.css";
 
-export function CardComponent({ card, discard }) {
+export function CardComponent({ player, card, discard, disabled}) {
   const suit = cardLookup.suits[card.suit] || {};
   const value = cardLookup.values[card.value] || card.value;
   const localImageUrl = cardLookup.getImageUrl(card.code);
 
-  const discardEvent = (card) => {
+  const discardEvent = (player, card) => {
+    if(disabled) return;
     console.log("CardComponent: discardEvent()");
-    discard(card);
+    let discardObj = {player, card};
+    discard(discardObj);
   }
   return (
-    <div className="card" onClick={() => discardEvent(card)} >
-      <img src={localImageUrl} alt={suit.icon} className="card-image" />
+    <div className={`card ${disabled ? "disabled" : ""}`} onClick={() => discardEvent(player, card)} >
+      <img src={localImageUrl}  alt={suit.icon} className="card-image" />
     </div>
   );
 }

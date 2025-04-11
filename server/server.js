@@ -6,6 +6,7 @@ const PORT = 3001;
 const game_response = require('./game_response');
 const shuffle_response = require('./shuffle_response');
 const deal_response = require('./deal_response');
+const discard_deck = require('./discard_deck');
 
 // Enable CORS
 app.use(cors());
@@ -22,7 +23,7 @@ const jsonResponse = {
     }
 };
 
-const discardPile = [];
+const discardPile = {};
 
 app.use(bodyParser.json()); // Parse JSON request body
 
@@ -38,19 +39,24 @@ app.post("/api/game", (req, res) => {
 });
 
 // POST Endpoint that accepts a parameter
+// should return a new player object with 
+// the proper number of cards
+// also return a object containing discarded
+// cards for the current game
 app.post("/api/discard", (req, res) => {
    try{
-        const responseObj = req.body; // Extract "name" from request body
-        const id = responseObj.id;
-        const card = responseObj.card;
+        const { player, card } = req.body;
+        console.log(player, card);
+        const hand = player.hand;
+        console.log(hand);
         
-        discardPile.push(card);
-
-        res.json({ discard_pile: discardPile });
+        const updatedHand = hand.filter(c => c.code !== card.code);
+        console.log(updatedHand);
+        return res.json(updatedHand);
    } catch {
     res.json({ "message": "error" });
    }
-        
+
 });
 
 
@@ -67,6 +73,9 @@ app.get("/api/shuffle", (req, res) => {
 });
 app.get("/api/deal", (req, res) => {
     res.json(deal_response);
+});
+app.get("/api/discard-deck", (req, res) => {
+    res.json(discard_deck);
 });
 
 // Start Server

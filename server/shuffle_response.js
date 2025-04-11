@@ -8,6 +8,8 @@ var data = {
             "hand": [
                 
             ],
+            "bid":0,
+            "trump":"",
             "id": "2370cc5f-bdd5-4c0d-a92c-2b3bfa4c3a21"
         },
         {
@@ -15,6 +17,8 @@ var data = {
             "hand": [
                 
             ],
+            "bid":0,
+            "trump":"",
             "id": "28ab0b91-9a60-4459-941b-695422e5c197"
         },
         {
@@ -22,6 +26,8 @@ var data = {
             "hand": [
                 
             ],
+            "bid":0,
+            "trump":"",
             "id": "567a9847-bfad-4fab-bfcd-d7ade4ce4590"
         },
         {
@@ -29,6 +35,8 @@ var data = {
             "hand": [
                 
             ],
+            "bid":0,
+            "trump":"",
             "id": "7b97499d-3ce3-4cfc-9831-e64c31c08595"
         }
     ],
