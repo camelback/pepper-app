@@ -31,6 +31,38 @@ const cardLookup = {
       if (!cardCode) return "/cards/2C.svg"; // Fallback for missing images
       return `/cards/${cardCode}.svg`; // Matches the SVG filename in /public/cards/
     },
+    getDefaultCard() {
+      return '/cards/BLUE_BACK.svg';
+    },
+    getTrumpSuitName(suit){
+      switch(suit){
+        case "S":
+          return 'Spades';
+        case "C":
+          return 'Clubs';
+        case "D":
+          return 'Diamonds';
+        case "H":
+          return 'Hearts';
+        default:  
+          return "";
+      }
+    },
+    getTrumpSuitImage(suit){
+      switch(suit){
+        case "S":
+          return '/cards/spades.png';
+        case "C":
+          return './cards/clubs.png';
+        case "D":
+          return './cards/diamonds.png';
+        case "H":
+          return './cards/hearts.png';
+        default:
+          return "";
+      }
+    }
   };
+  
   
   export default cardLookup;

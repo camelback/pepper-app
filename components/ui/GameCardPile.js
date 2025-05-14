@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import "../../css/CardGame.css";
-import { CardComponent } from "./Card";
+import CardComponent from "./Card";
 export function GameCardPile({ discardDeck }) {
     const cardsPerRow = 4;
     //console.log("discardGame", discardDeck);

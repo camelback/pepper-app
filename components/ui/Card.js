@@ -1,20 +1,31 @@
-import cardLookup from "@/utils/cardLookup";
+import cardLookup from "../../utils/cardLookup.js";
+import { motion } from "framer-motion";
 import "../../css/CardGame.css";
 
-export function CardComponent({ player, card, discard, disabled}) {
-  const suit = cardLookup.suits[card.suit] || {};
-  const value = cardLookup.values[card.value] || card.value;
-  const localImageUrl = cardLookup.getImageUrl(card.code);
+export default function CardComponent({ player, card, onCardClick, disabled}) {
+  const suit = cardLookup.suits[0] || {};
+  //const value = cardLookup.values[card.value] || card.value;
+  // const localImageUrl = disabled ? 
+  //       cardLookup.getDefaultCard() :
+  //       cardLookup.getImageUrl(card);
+  const localImageUrl =   cardLookup.getImageUrl(card);
 
-  const discardEvent = (player, card) => {
-    if(disabled) return;
-    console.log("CardComponent: discardEvent()");
-    let discardObj = {player, card};
-    discard(discardObj);
-  }
+  const handleClick = () => {
+    console.log("CardComponent: cardClicked()");
+    //if(disabled) return;
+    if (onCardClick) onCardClick({"playerId": player.id, "card": card});
+  };
   return (
-    <div className={`card ${disabled ? "disabled" : ""}`} onClick={() => discardEvent(player, card)} >
-      <img src={localImageUrl}  alt={suit.icon} className="card-image" />
+    <div  
+      data-testid={`card-${card}`}
+      // className={`card ${disabled} ? disabled : ""`}
+      className={`card`}
+      onClick={handleClick} >
+        <img
+          src={localImageUrl}
+          alt={suit.icon}
+          className="card-image" 
+        />
     </div>
   );
 }

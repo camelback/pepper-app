@@ -4,10 +4,10 @@ import { createGame, shuffle, deal, discardCard, getDiscardHand, submitGame } fr
 import { Button } from "../components/ui/button";
 import { CardComponent } from "../components/ui/Card";
 import CardGameTable from "./CardGameTable";
-
 import {GameCardPile } from "../components/ui/GameCardPile";
-
-import { ShuffledDeck } from "../components/ui/ShuffledDeck";
+import { ShuffledDeck } from "../components/ui/ShuffledDeck"; 
+import { startConnection, addPlayer, getAllGames,sendMessage,discardCardSignalR, discardRobotCardSignalR } from "../utils/signalr";
+import { AddPlayerUI } from "../components/ui/AddPlayerUI";
 import "../css/CardGame.css";
 const GAME_PHASES = {
   SETUP: "setup",
@@ -20,6 +20,9 @@ const GAME_PHASES = {
   GAME_OVER: "game_over"
 };
 export default function GameBoard({  }) {
+  const [name, setName] = useState(null);
+  //const { players2, sendPlayerUpdate } = useGameHub(name);
+
   const [game, setGame] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,27 +32,100 @@ export default function GameBoard({  }) {
   const [discardHand, setDiscardDeck] = useState(null);
   const [restart, setRestart] = useState(false);
 
-  const [players] = useState([
-    { id: 1, name: "Player 1", cardHand: ["A♠", "10♦", "J♣", "7♥", "K♠"] },
-    { id: 2, name: "Player 2", cardHand: ["2♠", "5♦", "9♣", "Q♥", "4♠"] },
-    { id: 3, name: "Player 3", cardHand: ["3♠", "8♦", "6♣", "A♥", "J♠"] },
-    { id: 4, name: "Player 4", cardHand: ["K♦", "Q♠", "10♣", "8♥", "2♦"] },
-  ]);
+  // const [players] = useState([
+  //   { id: 1, name: "Player 1", cardHand: ["A♠", "10♦", "J♣", "7♥", "K♠"] },
+  //   { id: 2, name: "Player 2", cardHand: ["2♠", "5♦", "9♣", "Q♥", "4♠"] },
+  //   { id: 3, name: "Player 3", cardHand: ["3♠", "8♦", "6♣", "A♥", "J♠"] },
+  //   { id: 4, name: "Player 4", cardHand: ["K♦", "Q♠", "10♣", "8♥", "2♦"] },
+  // ]);
 
   const [deck] = useState(["2♣", "3♠", "4♦", "5♥", "6♠", "7♣", "8♦", "9♥", "10♠", "J♦", "Q♥", "K♣", "A♦"]);
   const [phase, setPhase] = useState(GAME_PHASES.SETUP);
   const [activePlayerIdx, setActivePlayerIdx] = useState(1);
   const [bids, setBids] = useState([]);
   const [leaderId, setLeaderId] = useState(null);
-  const [gameState, setGameState] = useState(false);
+  //const [gameState, setGameState] = useState(false);
 
-  if (process.env.NEXT_PUBLIC_DEBUG == "true") {
-    console.log("DEBUGGING enabled");
-  }
+  // SignalR
+  const [playerName, setPlayerName] = useState("");
+  const [players, setPlayers] = useState([]);
+  const [actions, setActions] = useState([]);
+  const [input, setInput] = useState("");
+  const [gameId, setGameId] = useState("");
+  const [joined, setJoined] = useState(false);
+  const [hands, setHands] = useState([]);
+  const positions = ["pos-top", "pos-left", "pos-bottom", "pos-right"];
+  const [addPlayerUI, setAddPlayerUI] = useState(false);
+  const [gameState, setGameState] = useState(null);
+  const [connectionReady, setConnectionReady] = useState(false);
+  const [games, setGames] = useState([]);
+  // if (process.env.NEXT_PUBLIC_DEBUG == "true") {
+  //   console.log("DEBUGGING enabled");
+  // }
   useEffect(() => {
+    startConnection(setGameState).then(() => {
+      setConnectionReady(true);
+    });
+    // const initializeConnection = async () => {
+    //   startConnection(() => {}).then(() => {
+    //         getAllGames().then(setGames);
+    //       });
+    //   // await startConnection(
+    //   //   // onPlayerAdded
+    //   //   (newPlayer) => setPlayers((prev) => [...new Set([...prev, newPlayer])]),
+  
+    //   //   // onPlayerRemoved
+    //   //   (removedPlayer) =>
+    //   //     setPlayers((prev) => prev.filter((p) => p !== removedPlayer)),
+  
+    //   //   // onPlayerList (initial)
+    //   //   (list) => setPlayers(list),
+  
+    //   //   // onGameJoined
+    //   //   (gid) => setGameId(gid),
+  
+    //   //   // onAction (game log/chat)
+    //   //   (action) => {
+    //   //     setActions((prev) => [
+    //   //       ...prev,
+    //   //       `${action.playerName} ${action.action} (${new Date(
+    //   //         action.timestamp
+    //   //       ).toLocaleTimeString()})`
+    //   //     ]);
+    //   //   },
+  
+    //   //   // onHandsDealt
+    //   //   (handsData) => {
+    //   //     console.log("hands dealt", handsData);
+    //   //     const lHands = handsData;
+    //   //     const keys = Object.keys(lHands);
+    //   //     const newHandsObj = [];
+    //   //     for(let i=0; i<keys.length; i++){
+    //   //       newHandsObj.push(handsData[keys[i]]);
+    //   //     }
+    //   //     //let test = handsData.json();
+    //   //     //console.log("test", test);
+    //   //     console.log("test", newHandsObj);
+    //   //     setHands(newHandsObj);
+    //   //   }
 
+    //     // onCardDiscarded
+    //   //);
+    // };
+  
+    // initializeConnection();
   }, []);
 
+  useEffect(() => {
+    if (gameState?.players?.length < 4) return;
+      console.log("gameState", gameState);
+      setGameState(gameState);
+    // Fully populated game, update UI
+  }, [gameState]);
+
+  const updateGameState = () => {
+
+  }
   const advancePhase = async() => {
     switch (phase) {
       case GAME_PHASES.SETUP:
@@ -89,6 +165,7 @@ export default function GameBoard({  }) {
         setPhase(GAME_PHASES.GAME_OVER);
     }
   };
+  
   const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   };
@@ -159,6 +236,14 @@ export default function GameBoard({  }) {
     }
   };
 
+  const getPlayerAt = (posIndex) => {
+    if (!joined) return null;
+
+    const myIndex = players.findIndex((p) => p === playerName);
+    const positionIndex = (myIndex + posIndex) % players.length;
+
+    return players[positionIndex];
+  };
 
   const handleDealButton = async () => {
     try {
@@ -175,35 +260,51 @@ export default function GameBoard({  }) {
   const handleRestartButton = async() => {
       //setRestart(true);
   }
-  const onCardDiscard = async (discardObj) => {
+  
+  const onCardDiscard = async (discardObj, robot) => {
     try {
       
-      console.log("gameId", game.gameId);
-      // Find the player
-      const player = game.players.find(p => p.id === discardObj.player.id);
+      console.log("discardObj", discardObj);
+      await discardCardSignalR(discardObj.playerId, discardObj.card);
+      //Find the player
+      const player = gameState.players.find(p => p.id === discardObj.playerId);
       if (!player) return;
 
       // Find the card in their hand
-      const cardToDiscard = player.hand.find(card => card.code === discardObj.card.code);
+      const cardToDiscard = player.hand.find(card => card === discardObj.card);
       if (!cardToDiscard) return;
       
+      await sleep(1000);
+        const currId = gameState.currentTurnPlayerId;
+        await discardRobotCardSignalR(currId,"");
+        //Find the player
+        const player2 = gameState.players.find(p => p.id === currId);
+        if (!player2) return;
+
+        // Find the card in their hand
+        const cardToDiscard3 = player2.hand.find(card => card === currId);
+        if (!cardToDiscard3) return;
+      
+        
       // Build updated players list
-      const updatedPlayers = game.players.map(p =>
-        p.id === discardObj.player.id
-          ? { ...p, hand: p.hand.filter(card => card.code !== discardObj.card.code) }
-          : p
-      );
+      // const updatedPlayers = gameState.players.map(p =>
+      //   p.id === discardObj.playerId
+      //     ? { ...p, hand: p.hand.filter(card => card !== discardObj.card) }
+      //     : p
+      // );
 
       // Update game state
-      setGame(prevGame => ({
-        ...prevGame,
-        players: updatedPlayers,
-        gameRoundDiscardPile: [...prevGame.gameRoundDiscardPile, cardToDiscard],
+      // setGame((prevGame) => {
+      //   const newGame = [...prevGame];
+      //   return newGame;
+      //   //...prevGame,
+      //   //players: updatedPlayers,
+      //   //gameRoundDiscardPile: [...prevGame.gameRoundDiscardPile, cardToDiscard],
         
-      }));
+      // });
       
-      const tempPlyIdx = activePlayerId==4 ? 1 : activePlayerId+1;
-      setActivePlayerId(tempPlyIdx);
+      //const tempPlyIdx = activePlayerId==4 ? 1 : activePlayerId+1;
+      //setActivePlayerId(tempPlyIdx);
       
 
     
@@ -227,31 +328,137 @@ export default function GameBoard({  }) {
     console.log("game data response",gameDataResponse);
   }
 
+  const handleAddPlayerButton = async () => {
+    if(!addPlayerUI){
+      //addPlayer("dummy").then(() => getAllGames().then(setGames));
+      setAddPlayerUI(true);
+    }
+  
+  }
+  const handleAddPlayerTestButton = async () => {
+    handleJoin("Ben");
+  
+  }
+
+  const handleJoin = async (playerName) => {
+    if (playerName.trim()) {
+      //await addPlayer(playerName.trim());
+      const resp = await addPlayer(playerName.trim());
+      console.log(resp);
+      setJoined(true);
+      setAddPlayerUI(false);
+      setPlayerName(playerName.trim());
+    }
+  }
+
   //if (loading) return <p className="text-white">Loading game...</p>;
   //if (loadingPlayerCards) return <p className="text-white">Loading player cards...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="game-board">
-      <div className="game-controls">
-        <button onClick={advancePhase}>Next Phase: {phase}</button>
-        <button className="btn start-game-btn" onClick={handleStartButton}>Start Game</button>
-        <button className="btn restart-game-btn" onClick={handleRestartButton}>Restart Game</button>
-        <button className="btn shuffle-btn" onClick={handleShuffleButton}>Shuffle Cards</button>
-        <button className="btn deal-btn" onClick={handleDealButton}>Deal Cards</button>
-        <button className="btn deal-btn" onClick={onSubmitGame}>Submit Game</button>
-      </div>
-      {game &&
-        <div>
-            <CardGameTable players={game.players}
-              deck={game.deck}
-              activePlayerId={activePlayerId}
-              discard={onCardDiscard} />
-            <ShuffledDeck deck={game.deck} />
-            <GameCardPile discardDeck={game.gameRoundDiscardPile} />
-          </div>
-      }
-    </div>
+    <div>
+      {joined && !addPlayerUI && gameState?.players?.length < 3 &&
+        <div className="p-4">
+          <h1 className="text-xl font-bold mb-4">🎴 Game Room</h1>
 
+          <h2 className="mb-2">Current Turn:</h2>
+          <p>{gameState.currentTurnPlayerId}
+            {gameState?.players?.find((p) => p.id === gameState.currentTurnPlayerId)?.name ||
+              "Waiting..."}
+          </p>
+
+          <h2 className="mt-4 mb-2">Players:</h2>
+          <ul>
+            {gameState?.players?.map((player) => (
+              <li key={player.id}>
+                {player.name} – {player.hand?.join(", ") || "No cards"}
+              </li>
+            ))}
+          </ul>
+
+          <h2 className="mt-4 mb-2">Discard Pile:</h2>
+          <div>{gameState?.discardPile?.join(", ") || "Empty"}</div>
+        
+        
+          
+        </div>
+    }
+     {addPlayerUI &&
+        <div>
+            <AddPlayerUI join={handleJoin} />
+        </div>
+      }
+      {!joined && !addPlayerUI &&
+        <div>
+          <div className="game-controls">
+            <button onClick={advancePhase}>Next Phase: {phase}</button>
+            <button className="btn start-game-btn" onClick={handleAddPlayerButton}>Add Player</button>
+            <button className="btn start-game-btn" onClick={handleAddPlayerTestButton}>Test Add Player</button>
+            <button className="btn start-game-btn" onClick={handleStartButton}>Start Game</button>
+            <button className="btn restart-game-btn" onClick={handleRestartButton}>Restart Game</button>
+            <button className="btn shuffle-btn" onClick={handleShuffleButton}>Shuffle Cards</button>
+            <button className="btn deal-btn" onClick={handleDealButton}>Deal Cards</button>
+            <button className="btn deal-btn" onClick={onSubmitGame}>Submit Game</button>
+        </div>
+      </div>
+      }
+      {gameState?.players?.length > 3 &&
+        <div className="game-board">
+          <CardGameTable 
+              players={gameState?.players}
+              hands={hands}
+              activePlayerId={gameState?.currentTurnPlayerId}
+              onCardClick={onCardDiscard} />
+        
+        </div>
+      }
+      {gameState?.discardPile?.length > 0 &&
+        <div>
+            <ShuffledDeck deck={gameState.cardDeck} />
+            <GameCardPile discardDeck={gameState?.discardPile} />
+          </div>
+      } 
+
+  </div>
   );
 }
+
+/*
+//   {!joined && !addPlayerUI &&
+    //     <div>
+    //       <div className="game-controls">
+    //         <button onClick={advancePhase}>Next Phase: {phase}</button>
+    //         <button className="btn start-game-btn" onClick={handleAddPlayerButton}>Add Player</button>
+    //         <button className="btn start-game-btn" onClick={handleStartButton}>Start Game</button>
+    //         <button className="btn restart-game-btn" onClick={handleRestartButton}>Restart Game</button>
+    //         <button className="btn shuffle-btn" onClick={handleShuffleButton}>Shuffle Cards</button>
+    //         <button className="btn deal-btn" onClick={handleDealButton}>Deal Cards</button>
+    //         <button className="btn deal-btn" onClick={onSubmitGame}>Submit Game</button>
+    //     </div>
+    //   </div>
+    //   }
+    //   {addPlayerUI &&
+    //     <div>
+    //         <AddPlayerUI join={handleJoin} />
+    //     </div>
+    //   }
+    //   {joined && 
+    //     <CardGameTable 
+    //       players={players}
+    //       hands={hands}
+    //       activePlayerId="0"
+    //       onCardClick={onCardDiscard} />
+    //   }
+    //   {/* {game &&
+    //     <div>
+    //         <CardGameTable players={game.players}
+    //           deck={game.deck}
+    //           activePlayerId={activePlayerId}
+    //           discard={onCardDiscard} />
+    //         <ShuffledDeck deck={game.deck} />
+    //         <GameCardPile discardDeck={game.gameRoundDiscardPile} />
+    //       </div>
+    //   } 
+    // </div>
+
+*/

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 import "../../css/CardGame.css";
-import { CardComponent } from "./Card";
+import CardComponent from "./Card";
 export function ShuffledDeck({ deck }) {
 
     

@@ -1,0 +1,163 @@
+/* Card Table Layout */
+.card-table {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    background-color: #166534; /* green-600 */
+    border: 4px solid #facc15; /* yellow-500 */
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.8);
+    margin: 0 auto;
+  }
+  
+  /* Player Name Bubbles */
+  .player {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0.5rem;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  .player.robot {
+    font-style: italic;
+    color: #d1d5db; /* gray-300 */
+  }
+  
+  .player.human {
+    font-weight: bold;
+    color: white;
+  }
+
+  /* Position player names */
+.pos-bottom { bottom: 0.5rem; left: 50%; transform: translateX(-50%); }
+.pos-top    { top: 0.5rem; left: 50%; transform: translateX(-50%); }
+.pos-left   { left: 0.5rem; top: 50%; transform: translateY(-50%); }
+.pos-right  { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+
+  /* Player Positioning */
+.player-position {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.position-bottom {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.position-left {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.position-top {
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.position-right {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+  /* Positioning 
+  .pos-bottom {
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .pos-top {
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .pos-left {
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .pos-right {
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }*/
+  
+  /* Card hand container */
+.card-hand {
+  /* position: absolute; */
+  display: flex;
+  justify-content: center;
+  transform-origin: center;
+  z-index: 2;
+}
+
+.card-hand img {
+  width: 60px;
+  height: auto;
+  /* transform-origin: bottom center; */
+  /*margin-left: -40px;  overlap effect */
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Align card hands around the table */
+.card-hand.bottom {
+  bottom: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: row;
+}
+
+.card-hand.top {
+  top: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: row-reverse;
+}
+
+.card-hand.left {
+  top: 50%;
+  left: 4.5rem;
+  transform: translateY(-50%) rotate(-90deg);
+  flex-direction: row;
+}
+
+.card-hand.right {
+  top: 50%;
+  right: 4.5rem;
+  transform: translateY(-50%) rotate(90deg);
+  flex-direction: row-reverse;
+}
+/* Card Position Overlap */
+.card-position {
+  position: absolute;
+  transition: transform 0.2s ease-in-out;
+}
+
+  /* Game Log */
+  .game-log {
+    height: 160px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid white;
+  }
+  
+  /* Input Section */
+  .chat-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
