@@ -11,9 +11,10 @@ export async function startConnection(setGameState) {
         .withAutomaticReconnect()
         .build();
     
-        connection.on("ReceiveGameState", (gameState) => {
-            setGameState(gameState);
-        });
+        // connection.on("ReceiveGameState", (gameState) => {
+        //     console.log("ReceiveGameState", gameState);
+        //     setGameState(gameState);
+        // });
 
         connection.on("GameOver", (finalState) => {
           alert("🎉 AI game complete!");

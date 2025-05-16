@@ -175,7 +175,8 @@
 
 /* Highlight active player */
 .player-active {
-  border: 3px solid #22a747;
+  /* border: 3px solid #22a747; */
+  background-color: #137f32;
   transform: scale(1.1);
   transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
 }
@@ -216,6 +217,13 @@
 
 /* Card Hand */
 .card-hand {
+  position: relative;
+  display: flex;
+  height: 100px;
+  align-items: center;
+  margin-top: 10px;
+}
+.discard-hand {
   position: relative;
   display: flex;
   height: 100px;

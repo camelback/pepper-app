@@ -14,7 +14,7 @@ export default function PlayerUIContent({ player, hand, onCardClick, isActive, i
        //console.log("playeruicontent", hand);
        setHandSize(sz);
        setHand(hand);
-       setBid(player.bidCount); 
+       setBid(player.bid); 
       console.log("PlayerUIContent::isActive", isActive);
     }, []);
 
