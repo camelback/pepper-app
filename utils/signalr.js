@@ -11,11 +11,6 @@ export async function startConnection(setGameState) {
         .withAutomaticReconnect()
         .build();
     
-        // connection.on("ReceiveGameState", (gameState) => {
-        //     console.log("ReceiveGameState", gameState);
-        //     setGameState(gameState);
-        // });
-
         connection.on("GameOver", (finalState) => {
           alert("🎉 AI game complete!");
         });
@@ -31,13 +26,16 @@ export async function startConnection(setGameState) {
     return connection;
     
   }
-  
-  export function addPlayer(name) {
+  function checkConnection(){
     if (!connection) throw new Error("SignalR not connected");
+  }
+  export function addPlayer(name) {
+    checkConnection();
     return connection.invoke("AddPlayer", name);
   }
   
   export function discardCardSignalR(playerId, card) {
+    checkConnection();
     const pld = {
         playerId:playerId,
         card:card
@@ -45,28 +43,37 @@ export async function startConnection(setGameState) {
     return connection.invoke("DiscardCard", pld);
   }
   export function startRobotTraining(count) {
-    if(!connection) throw new Error("SignalR not connected");
+    checkConnection();
     return connection.invoke("StartRobotTraining", count);
   }
+
+  export function startAiGame(phase) {
+    checkConnection();
+    return connection.invoke("StartAiGame", phase);
+  }
+
   export function discardRobotCardSignalR(playerId, card) {
+    checkConnection();
     const pld = {
       playerId:playerId,
       card:card
-  }
+    }
     return connection.invoke("PlayRobotTurn", pld);
   }
   
   export function getAllGames() {
-    if (!connection) throw new Error("SignalR not connected");
-    return connection.invoke("GetAllGames2");
+    checkConnection();
+    return connection.invoke("GetAllGames");
   }
-  export function dealCards(gameId) {
-    if (!connection) throw new Error("SignalR not connected");
-    return connection.invoke("DealCards", gameId);
+
+  export function getQTable() {
+    checkConnection();
+    return connection.invoke("GetQTable");
   }
-  export function startAiGame() {
-    if (!connection) throw new Error("SignalR not connected");
-    return connection.invoke("StartAiGame");
+
+  export function sendDiscardVotes(votes) {
+    checkConnection();
+    return connection.invoke("HandleDiscardVotes", 1);
   }
   export async function invoke(connection, methodName, ...args) {
     if (!connection || !methodName) {

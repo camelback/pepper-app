@@ -15,7 +15,8 @@ export default function PlayerUIContent({ player, hand, onCardClick, isActive, i
        setHandSize(sz);
        setHand(hand);
        setBid(player.bid); 
-      console.log("PlayerUIContent::isActive", isActive);
+       console.log("player active" + isActive + " : " + player.name);
+       //getActivePlayer();
     }, []);
 
     const getActivePlayer = () => {
@@ -40,7 +41,7 @@ export default function PlayerUIContent({ player, hand, onCardClick, isActive, i
       player.trump = temp;
     }
     return (
-      <div className={`player-ui-content ${isActive ? 'player-active' : ''}`}>
+      <div className={`player-ui-content ${player.isActive ? 'player-active' : ''}`}>
         <div data-testid={`player-${player.id}`}>{player.name}
           <div className={`player-trump-label`}>{player.trump}</div>
         </div>
@@ -56,6 +57,7 @@ export default function PlayerUIContent({ player, hand, onCardClick, isActive, i
             <button className={`suit-button ${player.trump === 'D' ? 'active': ''}`}>♦</button>
             <button className={`suit-button ${player.trump === 'H' ? 'active': ''}`}>♥</button>
           </div>
+          <div>Wins: {player.winCount}</div>
           {/* <select className="suit-drop-down"
             value={player.trump || ""}
             onChange={(e) => onSuitChange(player, e.target.value)}

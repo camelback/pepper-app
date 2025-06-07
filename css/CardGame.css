@@ -292,7 +292,26 @@
   overflow-y: auto;
   z-index: 999;
 }
-
+.vote-button-container{
+  display:flex;
+  /* width:80%; */
+  border:1px solid white;
+  border-radius: 5%;
+  align-items: center;
+  justify-content: center;
+}
+.vote-button {
+  margin:0px 5px 0px 5px;
+}
+.green {
+  background-color:green;
+}
+.red {
+  background-color: red;
+}
+.gray {
+  background-color: gray;
+}
 .empty-text {
   opacity: 0.5;
   font-style: italic;
